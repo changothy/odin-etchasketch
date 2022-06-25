@@ -3,3 +3,12 @@
     justify-content: center;
     align-content: center;
 }
+
+div.cell {
+    padding: 5px;
+    border: solid black 1px;
+}
+
+.paint {
+    background-color: indigo;
+}
