@@ -4,6 +4,12 @@
     align-content: center;
 }
 
+#reset {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 div.cell {
     padding: 5px;
     border: solid black 1px;
