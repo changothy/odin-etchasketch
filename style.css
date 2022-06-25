@@ -4,7 +4,7 @@
     align-content: center;
 }
 
-#reset {
+#buttons {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
