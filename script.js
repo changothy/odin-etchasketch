@@ -16,11 +16,19 @@ function reset() {
     }
 }
 
-// TODO: get this working
+// Enables Rainbow Mode (paint with a random RGB value on hover)
 function toggleRainbowMode() {
-    (rainbowMode) ? rainbowMode = false : rainbowMode = true;
+    const rainbowBtn = document.querySelector("#rainbow");
+    if (rainbowMode) {
+        rainbowMode = false;
+        rainbowBtn.textContent = "RAINBOW MODE OFF";
+    } else {
+        rainbowMode = true;
+        rainbowBtn.textContent = "RAINBOW MODE ON";
+    }
 }
 
+// Returns a random RGB value
 function getRandomRGB() {
     let values = new Array(3);
     for (i = 0; i < 3; i++) {
@@ -29,13 +37,15 @@ function getRandomRGB() {
 
     return values;
 }
+
+// Gets user's desired grid size from a prompt
 function getUserGridSize() {
     gridSize = prompt("Enter your preferred grid size (x by x):");
 
     if (gridSize > 100) {
         alert("Maximum grid size is 100 x 100. Please enter a smaller number.");
         getUserGridSize();
-    } else if (gridSize < 0) {
+    } else if (gridSize <= 0) {
         alert("Please enter a number greater than 0.");
         getUserGridSize();
     } else if (isNaN(gridSize)) {
@@ -46,6 +56,7 @@ function getUserGridSize() {
     }
 }
 
+// Gradually darken pixel by increments of 10%
 function darken(value) {
     let currentBrightness = value.substring(value.indexOf("(") + 1, value.indexOf("%"));
     let newBrightness = currentBrightness - 10;
@@ -56,10 +67,11 @@ function darken(value) {
     return "brightness(" + newBrightness + "%)";
 }
 
+// Generates an etch-a-sketch grid
 function generate(gridSize) {
     const grid = document.querySelector('#grid');
 
-    // remove all child nodes before building
+    // remove all grid squares (child nodes of grid div) before building
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild);
     }
@@ -74,21 +86,24 @@ function generate(gridSize) {
             rowDiv.classList.add(`${a}`);
             rowDiv.classList.add("cell");
             rowDiv.style.filter = "brightness(110%)";
-            // rowDiv.textContent = `${i}${a}`
 
             rowDiv.addEventListener('mouseover', () => {
+
+                // Rainbow mode
+                if (rainbowMode) {
+                    let values = getRandomRGB();
+                    rowDiv.setAttribute('style', `background: rgb(${values[0]}, ${values[1]}, ${values[2]})`);
+                } else {
+                    // Gradually darken over time
+                    rowDiv.classList.add('paint');
+                    rowDiv.style.filter = darken(rowDiv.style.filter);
+                }
+
+                // OTHER MODES:
                 // Paint with default color
                 // rowDiv.classList.add('paint');
 
-                // Paint with rainbow
-                // let values = getRandomRGB();
-                // rowDiv.setAttribute('style', `background: rgb(${values[0]}, ${values[1]}, ${values[2]})`);
-
-                // Gradually darken over time
-                rowDiv.classList.add('paint');
-                rowDiv.style.filter = darken(rowDiv.style.filter);
-
-                // Rough tracing
+                // Negative drawing
                 // rowDiv.addEventListener('mouseenter', () => {
                 //     rowDiv.classList.add('paint');
                 // });
@@ -103,4 +118,5 @@ function generate(gridSize) {
     }
 }
 
+// Paint a grid on load with the default gridsize
 generate(DEFAULT_GRIDSIZE);
